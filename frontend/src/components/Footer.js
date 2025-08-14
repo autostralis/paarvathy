@@ -97,11 +97,12 @@ const Footer = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <Phone size={18} style={{ color: 'var(--gold-primary)' }} />
                   <a 
-                    href="tel:+919388666777"
+                    href="tel:" 
                     className="body-small" 
                     style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}
+                    aria-label="Phone number hidden"
                   >
-                    +91‑9388666777
+                    <span style={{ display: 'none' }}>(Your Number Here)</span>
                   </a>
                 </div>
               </div>
