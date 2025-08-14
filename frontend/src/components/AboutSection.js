@@ -276,7 +276,7 @@ const AboutSection = () => {
             maxWidth: '700px',
             margin: '0 auto 40px'
           }}>
-            Every transaction is personally overseen by Manikandan Ranganathan, aerospace veteran 
+            Every transaction is personally overseen by Chief Exective Officer, aerospace veteran 
             with 15+ years of experience and a deep global network spanning India, Europe, and beyond.
           </p>
           
