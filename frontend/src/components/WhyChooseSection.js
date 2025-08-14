@@ -6,7 +6,7 @@ const WhyChooseSection = () => {
     {
       icon: <Crown size={32} />,
       title: "Founder-Led Expertise",
-      description: "Every transaction personally overseen by Manikandan Ranganathan, aerospace veteran with a deep global network."
+      description: "Every transaction personally overseen by Chief Executive Officer, aerospace veteran with a deep global network."
     },
     {
       icon: <Globe size={32} />,
