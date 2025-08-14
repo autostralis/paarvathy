@@ -1,6 +1,108 @@
 import React from "react";
 import { MapPin, Clock, Users, Shield, CheckCircle, TrendingUp } from "lucide-react";
 
+/** Intersection observer hook to trigger animations when visible */
+const useInView = (threshold = 0.4) => {
+  const ref = React.useRef(null);
+  const [inView, setInView] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || inView) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [inView]);
+
+  return [ref, inView];
+};
+
+/** Smooth count-up for values like "15+", "100%", "9" */
+const CountUp = ({ value, duration = 1200, inView }) => {
+  const [display, setDisplay] = React.useState(value);
+  const rafRef = React.useRef(0);
+
+  // Extract numeric part and suffix (%, +, etc.)
+  const match = String(value).match(/([-+]?[0-9]*\.?[0-9]+)/);
+  const target = match ? parseFloat(match[1]) : 0;
+  const suffix = match ? String(value).slice(match[0].length) : "";
+
+  React.useEffect(() => {
+    if (!inView) return;
+    const start = performance.now();
+    const from = 0;
+
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      const current = from + (target - from) * eased;
+      const formatted =
+        Number.isInteger(target) ? Math.round(current).toString() : current.toFixed(1);
+      setDisplay(`${formatted}${suffix}`);
+      if (p < 1) {
+        rafRef.current = requestAnimationFrame(step);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [inView, duration, target, suffix]);
+
+  return <>{display}</>;
+};
+
+/** Single stat card with in-view detection & count animation */
+const StatCard = ({ stat, index }) => {
+  const [ref, inView] = useInView(0.45);
+  return (
+    <div
+      ref={ref}
+      className="professional-card-feature text-center scale-in"
+      style={{ animationDelay: `${index * 0.1}s` }}
+    >
+      <div
+        style={{
+          color: 'var(--gold-primary)',
+          marginBottom: '20px',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        {stat.icon}
+      </div>
+
+      <div
+        className="heading-1"
+        style={{
+          color: 'var(--navy-primary)',
+          marginBottom: '8px',
+          fontSize: '3rem',
+          fontWeight: '700',
+          minHeight: '3.2rem'
+        }}
+      >
+        <CountUp value={stat.number} inView={inView} />
+      </div>
+
+      <div className="heading-3" style={{ marginBottom: '12px' }}>
+        {stat.label}
+      </div>
+
+      <p className="body-small" style={{ color: 'var(--text-muted)' }}>
+        {stat.description}
+      </p>
+    </div>
+  );
+};
+
 const QuickFacts = () => {
   const stats = [
     {
@@ -59,37 +161,7 @@ const QuickFacts = () => {
         
         <div className="grid-3 mb-16">
           {stats.map((stat, index) => (
-            <div 
-              key={index}
-              className="professional-card-feature text-center scale-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div style={{ 
-                color: 'var(--gold-primary)', 
-                marginBottom: '20px',
-                display: 'flex',
-                justifyContent: 'center'
-              }}>
-                {stat.icon}
-              </div>
-              
-              <div className="heading-1" style={{ 
-                color: 'var(--navy-primary)', 
-                marginBottom: '8px',
-                fontSize: '3rem',
-                fontWeight: '700'
-              }}>
-                {stat.number}
-              </div>
-              
-              <div className="heading-3" style={{ marginBottom: '12px' }}>
-                {stat.label}
-              </div>
-              
-              <p className="body-small" style={{ color: 'var(--text-muted)' }}>
-                {stat.description}
-              </p>
-            </div>
+            <StatCard key={index} stat={stat} index={index} />
           ))}
         </div>
 
