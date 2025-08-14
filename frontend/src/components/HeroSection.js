@@ -308,12 +308,12 @@ const HeroSection = () => {
         .hero-title {}
         .hero-excellence { color: var(--gold-primary); }
         .intro-anim {}
-        .cta-wrap {}
-        .ti { opacity: 0; transform: translateY(10px); animation: tiIn .7s ease-out forwards; }
-        .ti:nth-child(1) { animation-delay: .2s; }
-        .ti:nth-child(2) { animation-delay: .5s; }
-        .ti:nth-child(3) { animation-delay: .8s; }
-        @keyframes tiIn { to { opacity:1; transform: translateY(0); } }
+        .cta-wrap { }
+        .cta, .cta-secondary { transform: translateX(-12px); opacity: 0; animation: ctaIn 700ms cubic-bezier(.2,.7,.3,1) 300ms forwards; }
+        .cta-secondary { animation-delay: 450ms; }
+        @keyframes ctaIn { to { transform: translateX(0); opacity: 1; } }
+        .cta:hover, .cta-secondary:hover { box-shadow: 0 0 32px 8px rgba(212,175,55,0.25); }
+        .ti {}
       `}</style>
     </section>
   );
