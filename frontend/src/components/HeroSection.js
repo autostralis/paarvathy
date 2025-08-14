@@ -307,12 +307,9 @@ const HeroSection = () => {
         }
         .hero-title {}
         .hero-excellence { color: var(--gold-primary); }
-        .intro-anim {}
-        .cta-wrap { }
-        .cta, .cta-secondary { transform: translateX(-12px); opacity: 0; animation: ctaIn 700ms cubic-bezier(.2,.7,.3,1) 300ms forwards; }
-        .cta-secondary { animation-delay: 450ms; }
-        @keyframes ctaIn { to { transform: translateX(0); opacity: 1; } }
-        .cta:hover, .cta-secondary:hover { box-shadow: 0 0 32px 8px rgba(212,175,55,0.25); }
+        .intro-anim { opacity:0; filter: blur(6px) brightness(0.6); animation: introVid 1200ms ease-out forwards; }
+        @keyframes introVid { to { opacity:1; filter: blur(0) brightness(0.7); } }
+        .cta-wrap {}
         .ti {}
       `}</style>
     </section>
