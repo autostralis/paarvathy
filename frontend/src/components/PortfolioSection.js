@@ -83,9 +83,9 @@ const PortfolioSection = () => {
     <section id="portfolio" className="professional-section">
       <div className="professional-content-container">
         <div className="text-center mb-16">
-          <h2 className="display-medium mb-6">
+          {/* <h2 className="display-medium mb-6">
             Recent Transactions
-          </h2>
+          </h2> */}
           <p className="body-large" style={{ maxWidth: '700px', margin: '0 auto', color: 'var(--text-secondary)' }}>
             Explore our portfolio of successful aircraft transactions and aviation consulting projects, 
             showcasing our expertise across diverse aircraft categories and markets.
