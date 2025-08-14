@@ -9,7 +9,7 @@ export const mockData = {
     website: "www.aerofyn.com",
     email: "contact@aerofyn.com",
     careers_email: "careers@aerofyn.com",
-    phone: "+91‑9388666777",
+    phone: "", // (Your Number Here)
     locations: ["India", "Europe", "UK"]
   },
 
