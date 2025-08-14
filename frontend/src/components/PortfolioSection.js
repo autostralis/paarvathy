@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { ExternalLink, ArrowRight } from "lucide-react";
 
 const PortfolioSection = () => {
+  const SHOW_PORTFOLIO = false;
+  if (!SHOW_PORTFOLIO) return null;
   const [activeFilter, setActiveFilter] = useState('all');
 
   const portfolioItems = [
