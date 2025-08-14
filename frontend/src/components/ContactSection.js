@@ -54,28 +54,54 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    console.log("Form submitted:", formData);
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-
-    // Reset form after showing success
-    setTimeout(() => {
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        country: "",    // ← reset country
-        service: "",
-        aircraftType: "",
-        timeline: "",
-        budget: "",
-        message: ""
+    try {
+      const res = await fetch("https://formspree.io/f/mdkdyvdg", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          country: formData.country,
+          service: formData.service,
+          aircraftType: formData.aircraftType,
+          timeline: formData.timeline,
+          budget: formData.budget,
+          message: formData.message
+        })
       });
-      setIsSubmitted(false);
-    }, 3000);
+
+      if (res.ok) {
+        setIsSubmitted(true);
+        // Reset form after showing success
+        setTimeout(() => {
+          setFormData({
+            name: "",
+            email: "",
+            company: "",
+            country: "",
+            service: "",
+            aircraftType: "",
+            timeline: "",
+            budget: "",
+            message: ""
+          });
+          setIsSubmitted(false);
+        }, 3000);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        console.error("Formspree error:", err);
+        alert("Sorry, something went wrong sending your message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Network error sending your message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
