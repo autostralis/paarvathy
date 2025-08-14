@@ -1,35 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { ArrowRight, Play, Award, Globe, Shield } from "lucide-react";
 
 const HeroSection = () => {
-  const sectionRef = useRef(null);
-  const [parallax, setParallax] = useState({ y: 0, scale: 1 });
-  const [cardTilt, setCardTilt] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    function onScroll() {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      // progress 0..1 for first viewport height
-      const progress = Math.min(Math.max((0 - rect.top) / vh, 0), 1);
-      const y = progress * 60;             // up to 60px translate
-      const scale = 1 + progress * 0.06;   // up to 1.06 scale (Ken Burns)
-      setParallax({ y, scale });
-    }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const handleParallaxMouse = (e) => {
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const nx = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
-    const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    setCardTilt({ x: nx * 16, y: ny * 16 }); // +/-16px sway
-  };
-
   const handleContactClick = () => {
     const element = document.getElementById('contact');
     if (element) {
@@ -50,7 +22,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section ref={sectionRef} onMouseMove={handleParallaxMouse} className="professional-section-lg" style={{ 
+    <section className="professional-section-lg" style={{ 
       position: 'relative',
       minHeight: '100vh',
       display: 'flex',
@@ -64,7 +36,6 @@ const HeroSection = () => {
         muted
         loop
         playsInline
-        style={{ transform: `translateY(${parallax.y}px) scale(${parallax.scale})` }}
       >
         <source src="/background.mp4" type="video/mp4" />
         {/* Fallback image */}
@@ -210,30 +181,24 @@ const HeroSection = () => {
             height: '100%'
           }}>
             {/* Floating Stats Cards */}
-            <div
-              className="stats-wrap"
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '460px'
-              }}
-            >
-              <div
-                className="floating stat-card"
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              height: '400px'
+            }}>
+              <div 
+                className="floating"
                 style={{
                   position: 'absolute',
-                  top: '8%',
-                  right: '6%',
+                  top: '10%',
+                  right: '10%',
                   background: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: '16px',
                   padding: '24px 32px',
                   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
-                  animationDelay: '0s',
-                  transform: `translate3d(${cardTilt.x}px, ${cardTilt.y}px, 0)`,
-                  zIndex: 3,
-                  maxWidth: '340px'
+                  animationDelay: '0s'
                 }}
               >
                 <div className="heading-2" style={{ color: 'var(--navy-primary)', marginBottom: '8px' }}>
@@ -244,22 +209,19 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              <div
-                className="floating stat-card"
+              <div 
+                className="floating"
                 style={{
                   position: 'absolute',
-                  bottom: '24%',
-                  left: '6%',
+                  bottom: '20%',
+                  left: '5%',
                   background: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: '16px',
                   padding: '24px 32px',
                   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
-                  animationDelay: '2s',
-                  transform: `translate3d(${-cardTilt.x * 0.8}px, ${-cardTilt.y * 0.8}px, 0)`,
-                  zIndex: 2,
-                  maxWidth: '340px'
+                  animationDelay: '2s'
                 }}
               >
                 <div className="heading-2" style={{ color: 'var(--gold-primary)', marginBottom: '8px' }}>
@@ -270,22 +232,19 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              <div
-                className="floating stat-card"
+              <div 
+                className="floating"
                 style={{
                   position: 'absolute',
-                  top: '64%',
-                  right: '28%',
+                  top: '60%',
+                  right: '25%',
                   background: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: '16px',
                   padding: '24px 32px',
                   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
-                  animationDelay: '4s',
-                  transform: `translate3d(${cardTilt.x * 0.6}px, ${cardTilt.y * 0.6}px, 0)`,
-                  zIndex: 1,
-                  maxWidth: '340px'
+                  animationDelay: '4s'
                 }}
               >
                 <div className="heading-2" style={{ color: 'var(--navy-primary)', marginBottom: '8px' }}>
@@ -299,76 +258,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-      <style jsx>{`
-        .hero-background {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          filter: brightness(0.7);
-          will-change: transform;
-          transition: transform 0.2s ease-out;
-        }
-        .hero-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, rgba(9,13,23,0.15) 0%, rgba(9,13,23,0.45) 40%, rgba(9,13,23,0.75) 100%);
-          pointer-events: none;
-        }
-        .fade-in {
-          animation: fadeUp 800ms ease-out both;
-        }
-        .floating {
-          animation: floatY 6s ease-in-out infinite alternate;
-        }
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 18px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-        @keyframes floatY {
-          0% { transform: translate3d(0, 0px, 0); }
-          100% { transform: translate3d(0, -14px, 0); }
-        }
-        /* Buttons (ensure visible over video) */
-        .btn-gold, .btn-secondary {
-          position: relative;
-          z-index: 1;
-        }
-        /* Stats responsive layout to prevent overlaps */
-        @media (max-width: 1280px) {
-          .stats-wrap { height: 420px; }
-        }
-        @media (max-width: 1024px) {
-          .stats-wrap { height: 380px; }
-          .stat-card { max-width: 320px; }
-        }
-        @media (max-width: 900px) {
-          .stats-wrap {
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            padding-top: 8px;
-          }
-          .stat-card {
-            position: relative !important;
-            top: auto !important;
-            right: auto !important;
-            bottom: auto !important;
-            left: auto !important;
-            transform: none !important;
-            width: min(92%, 360px);
-          }
-        }
-      `}</style>
     </section>
   );
 };
