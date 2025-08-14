@@ -15,7 +15,7 @@ const Footer = () => {
   const companyLinks = [
     { name: "About AeroFyn", href: "#about" },
     { name: "Our Process", href: "#process" },
-    { name: "Recent Transactions", href: "#portfolio" },
+    // { name: "Recent Transactions", href: "#portfolio" },
     { name: "Global Presence", href: "#about" },
     { name: "Leadership Team", href: "#about" }
   ];
