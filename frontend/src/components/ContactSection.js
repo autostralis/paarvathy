@@ -70,14 +70,6 @@ const ContactSection = () => {
         "contact@aerofyn.com",
         "contact@aerofyn.com"
       ]
-    },
-    {
-      icon: <Phone size={28} />,
-      title: "Direct Line",
-      details: [
-        "+91‑9388666777",
-        "Available 24/7 for urgent aviation matters"
-      ]
     }
   ];
 
