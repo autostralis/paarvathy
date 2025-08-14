@@ -1,13 +1,37 @@
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Send, Briefcase, Clock, CheckCircle } from "lucide-react";
+import { Mail, MapPin, Send, Briefcase, Clock, CheckCircle } from "lucide-react";
 import { mockData } from "../data/mock";
+
+// Full country list (sorted)
+const countries = [
+  "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria",
+  "Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan",
+  "Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde",
+  "Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros",
+  "Congo, Democratic Republic of the","Congo, Republic of the","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic",
+  "Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea",
+  "Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece",
+  "Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia",
+  "Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Korea, North",
+  "Korea, South","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein",
+  "Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania",
+  "Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia",
+  "Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Macedonia","Norway","Oman","Pakistan",
+  "Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania",
+  "Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino",
+  "Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia",
+  "Solomon Islands","Somalia","South Africa","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland",
+  "Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia",
+  "Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay",
+  "Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"
+].sort();
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     company: "",
-    phone: "",
+    country: "",        // ← added
     service: "",
     aircraftType: "",
     timeline: "",
@@ -29,21 +53,21 @@ const ContactSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     console.log("Form submitted:", formData);
     setIsSubmitted(true);
     setIsSubmitting(false);
-    
+
     // Reset form after showing success
     setTimeout(() => {
       setFormData({
         name: "",
         email: "",
         company: "",
-        phone: "",
+        country: "",    // ← reset country
         service: "",
         aircraftType: "",
         timeline: "",
@@ -101,7 +125,7 @@ const ContactSection = () => {
             }}>
               <CheckCircle size={40} style={{ color: 'var(--navy-primary)' }} />
             </div>
-            
+
             <h3 className="heading-1 mb-4" style={{ color: 'var(--navy-primary)' }}>
               Thank You for Your Interest!
             </h3>
@@ -143,14 +167,14 @@ const ContactSection = () => {
               <h3 className="heading-1 mb-8" style={{ color: 'var(--navy-primary)' }}>
                 Get Professional Consultation
               </h3>
-              
+
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 {/* Personal Information */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
@@ -179,9 +203,9 @@ const ContactSection = () => {
                     />
                   </div>
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
@@ -210,12 +234,12 @@ const ContactSection = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
@@ -242,44 +266,50 @@ const ContactSection = () => {
                       onBlur={(e) => e.target.style.borderColor = 'var(--border-light)'}
                     />
                   </div>
+
+                  {/* Country dropdown (replaces Phone) */}
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
                     }}>
-                      Phone Number
+                      Country *
                     </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="+91 xxx xxx xxxx"
-                      value={formData.phone}
+                    <select
+                      name="country"
+                      value={formData.country}
                       onChange={handleInputChange}
+                      required
                       style={{
                         width: '100%',
                         padding: '16px',
                         background: 'var(--bg-secondary)',
                         border: '2px solid var(--border-light)',
                         borderRadius: '8px',
-                        color: 'var(--text-primary)',
+                        color: formData.country ? 'var(--text-primary)' : 'var(--text-muted)',
                         fontSize: '16px',
                         transition: 'border-color 0.3s ease'
                       }}
                       onFocus={(e) => e.target.style.borderColor = 'var(--gold-primary)'}
                       onBlur={(e) => e.target.style.borderColor = 'var(--border-light)'}
-                    />
+                    >
+                      <option value="" disabled>Select country</option>
+                      {countries.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
-                
+
                 {/* Aviation Specific Fields */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
@@ -312,9 +342,9 @@ const ContactSection = () => {
                     </select>
                   </div>
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
@@ -350,9 +380,9 @@ const ContactSection = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
@@ -384,9 +414,9 @@ const ContactSection = () => {
                     </select>
                   </div>
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '8px', 
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
                       fontWeight: '600',
                       color: 'var(--navy-primary)',
                       fontSize: '14px'
@@ -420,11 +450,11 @@ const ContactSection = () => {
                     </select>
                   </div>
                 </div>
-                
+
                 <div>
-                  <label style={{ 
-                    display: 'block', 
-                    marginBottom: '8px', 
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
                     fontWeight: '600',
                     color: 'var(--navy-primary)',
                     fontSize: '14px'
@@ -452,9 +482,9 @@ const ContactSection = () => {
                     onBlur={(e) => e.target.style.borderColor = 'var(--border-light)'}
                   />
                 </div>
-                
-                <button 
-                  type="submit" 
+
+                <button
+                  type="submit"
                   className="btn-primary"
                   disabled={isSubmitting}
                   style={{
@@ -475,12 +505,12 @@ const ContactSection = () => {
               <h3 className="heading-1 mb-8" style={{ color: 'var(--navy-primary)' }}>
                 Connect With Our Experts
               </h3>
-              
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', marginBottom: '40px' }}>
                 {contactInfo.map((info, index) => (
                   <div key={index} className="professional-card">
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
-                      <div style={{ 
+                      <div style={{
                         color: 'var(--gold-primary)',
                         padding: '16px',
                         background: 'var(--navy-primary)',
@@ -493,7 +523,7 @@ const ContactSection = () => {
                           {info.title}
                         </h4>
                         {info.details.map((detail, detailIndex) => (
-                          <p key={detailIndex} className="body-medium" style={{ 
+                          <p key={detailIndex} className="body-medium" style={{
                             color: detailIndex === 0 ? 'var(--text-primary)' : 'var(--text-secondary)',
                             marginBottom: '4px',
                             fontWeight: detailIndex === 0 ? '600' : '400'
@@ -512,12 +542,12 @@ const ContactSection = () => {
                 <h4 className="heading-3 mb-6" style={{ color: 'var(--navy-primary)' }}>
                   Our Commitment to You
                 </h4>
-                
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {responseTime.map((item, index) => (
-                    <div key={index} style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
+                    <div key={index} style={{
+                      display: 'flex',
+                      alignItems: 'center',
                       gap: '12px',
                       padding: '12px',
                       background: 'var(--bg-primary)',
@@ -547,13 +577,13 @@ const ContactSection = () => {
                   </div>
                   <h4 className="heading-3">Join Our Team</h4>
                 </div>
-                
+
                 <p className="body-medium mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  Explore opportunities with a growing aviation advisory firm that values documentation 
+                  Explore opportunities with a growing aviation advisory firm that values documentation
                   discipline and global excellence.
                 </p>
-                
-                <p className="body-small" style={{ 
+
+                <p className="body-small" style={{
                   color: 'var(--gold-primary)',
                   fontWeight: '600'
                 }}>
@@ -564,20 +594,20 @@ const ContactSection = () => {
           </div>
         </div>
       </div>
-      
+
       <style jsx>{`
         input::placeholder,
         textarea::placeholder,
         select {
           color: var(--text-muted);
         }
-        
+
         @media (max-width: 768px) {
           .contact-grid {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
           }
-          
+
           .form-row {
             grid-template-columns: 1fr !important;
           }
