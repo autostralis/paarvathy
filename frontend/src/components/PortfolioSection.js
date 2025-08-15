@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ArrowRight } from "lucide-react";
 
-const PLACEHOLDER = "/placeholder-jet.jpg"; // optional placeholder in /public
+const PLACEHOLDER = "/placeholder-jet.jpg"; // keep this in /public
 
 export default function PortfolioSection() {
   const [items, setItems] = useState([]);
@@ -24,17 +23,19 @@ export default function PortfolioSection() {
         if (!cancel) setLoading(false);
       }
     })();
-    return () => { cancel = true; };
+    return () => {
+      cancel = true;
+    };
   }, []);
 
   const categories = useMemo(() => {
-    const set = new Set(items.map(i => i.category).filter(Boolean));
+    const set = new Set(items.map((i) => i.category).filter(Boolean));
     return ["all", ...Array.from(set)];
   }, [items]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter(i => {
+    return items.filter((i) => {
       const catOk = cat === "all" || i.category === cat;
       const text = `${i.make || ""} ${i.model || ""} ${i.variant || ""}`.toLowerCase();
       const qOk = !q || text.includes(q);
@@ -71,7 +72,15 @@ export default function PortfolioSection() {
         </div>
 
         {/* Controls */}
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginBottom: 40 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+            justifyContent: "center",
+            marginBottom: 40,
+          }}
+        >
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -80,7 +89,7 @@ export default function PortfolioSection() {
               padding: "12px 14px",
               border: "1px solid var(--border-light)",
               borderRadius: 8,
-              minWidth: 220
+              minWidth: 220,
             }}
           />
           <select
@@ -88,13 +97,15 @@ export default function PortfolioSection() {
             onChange={(e) => setCat(e.target.value)}
             style={{ padding: "12px 14px", borderRadius: 8 }}
           >
-            {categories.map(c => (
+            {categories.map((c) => (
               <option key={c} value={c}>
                 {c === "all" ? "All Categories" : toTitle(c)}
               </option>
             ))}
           </select>
-          <a className="btn-gold" href="#contact">List Your Aircraft</a>
+          <a className="btn-gold" href="#contact">
+            List Your Aircraft
+          </a>
         </div>
 
         {/* Grid */}
@@ -107,10 +118,14 @@ export default function PortfolioSection() {
             >
               {/* Image */}
               <div style={{ position: "relative", height: 220, overflow: "hidden" }}>
-                <img
-                  src={(i.images && i.images[0]) || PLACEHOLDER}
-                  alt={`${i.make || ""} ${i.model || ""}`.trim()}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s ease" }}
+                <SmartImage
+                  item={i}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    transition: "transform 0.3s ease",
+                  }}
                   onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
                   onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                 />
@@ -124,10 +139,11 @@ export default function PortfolioSection() {
               {/* Content */}
               <div style={{ padding: 20 }}>
                 <h3 className="heading-3" style={{ marginBottom: 6, color: "var(--navy-primary)" }}>
-                  {i.make} {i.model}{i.variant ? ` ${i.variant}` : ""}
+                  {i.make} {i.model}
+                  {i.variant ? ` ${i.variant}` : ""}
                 </h3>
 
-                {/* Year only */}
+                {/* Year only (no location at all) */}
                 <div className="body-small" style={{ color: "var(--text-muted)", marginBottom: 12 }}>
                   {i.year || ""}
                 </div>
@@ -139,7 +155,7 @@ export default function PortfolioSection() {
                   {num(i.total_time_hours) && <Pill>{num(i.total_time_hours).toLocaleString()} hrs TT</Pill>}
                 </div>
 
-                {/* Only Enquire */}
+                {/* Enquire CTA */}
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <a
                     className="btn-gold"
@@ -148,7 +164,7 @@ export default function PortfolioSection() {
                     )}`}
                   >
                     Enquire
-                    <ArrowRight size={18} />
+                    <Arrow />
                   </a>
                 </div>
               </div>
@@ -164,18 +180,21 @@ export default function PortfolioSection() {
             background: "var(--navy-primary)",
             borderRadius: 16,
             textAlign: "center",
-            color: "var(--text-white)"
+            color: "var(--text-white)",
           }}
         >
           <h3 className="heading-1 mb-4" style={{ color: "var(--text-white)" }}>
             Can’t find your exact spec?
           </h3>
-          <p className="body-large mb-8" style={{ color: "rgba(255,255,255,0.8)", maxWidth: 680, margin: "0 auto 32px" }}>
+          <p
+            className="body-large mb-8"
+            style={{ color: "rgba(255,255,255,0.8)", maxWidth: 680, margin: "0 auto 32px" }}
+          >
             Tell us your mission profile—range, seats, budget—and we’ll source curated off-market options.
           </p>
           <a className="btn-gold" href="mailto:contact@aerofyn.com?subject=Aircraft%20Sourcing%20Request">
             Request Sourcing
-            <ArrowRight size={20} />
+            <Arrow size={20} />
           </a>
         </div>
       </div>
@@ -183,7 +202,52 @@ export default function PortfolioSection() {
   );
 }
 
-/* Helpers */
+/* ---------- Helpers ---------- */
+function SmartImage({ item, style, ...rest }) {
+  const candidates = [
+    ...(Array.isArray(item.images) && item.images.length ? [item.images[0]] : []),
+    `/assets/${item.id}.webp`,
+    `/assets/${item.id}.jpg`,
+    `/assets/${item.id}.jpeg`,
+    `/assets/${item.id}.png`,
+    PLACEHOLDER,
+  ];
+  const [idx, setIdx] = useState(0);
+  const alt = `${item.make || ""} ${item.model || ""}`.trim();
+
+  return (
+    <img
+      src={candidates[idx]}
+      alt={alt}
+      loading="lazy"
+      onError={() => setIdx((n) => Math.min(n + 1, candidates.length - 1))}
+      style={style}
+      {...rest}
+    />
+  );
+}
+
+function Arrow({ size = 18 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ marginLeft: 6 }}
+      aria-hidden="true"
+    >
+      <path
+        d="M5 12h12M13 6l6 6-6 6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function toTitle(s) {
   return String(s || "")
     .replace(/[-_]/g, " ")
@@ -202,7 +266,7 @@ function Badge({ children, dark }) {
         padding: "6px 10px",
         borderRadius: 10,
         fontSize: 12,
-        fontWeight: 700
+        fontWeight: 700,
       }}
     >
       {children}
@@ -218,7 +282,7 @@ function Pill({ children }) {
         padding: "4px 8px",
         borderRadius: 6,
         fontSize: 12,
-        fontWeight: 600
+        fontWeight: 600,
       }}
     >
       {children}
