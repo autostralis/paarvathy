@@ -115,7 +115,7 @@ const QuickFacts = () => {
       icon: <MapPin size={32} />,
       number: "3",
       label: "Global Markets",
-      description: "India, UK & Estonia presence"
+      description: "India, UK & Europe presence"
     },
     {
       icon: <CheckCircle size={32} />,
