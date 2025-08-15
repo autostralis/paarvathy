@@ -62,7 +62,7 @@ export default function PortfolioSection() {
   return (
     <section id="portfolio" className="professional-section">
       <div className="professional-content-container">
-        {/* Header (no edit note) */}
+        {/* Header */}
         <div className="text-center mb-16">
           <h2 className="display-medium mb-6">Aircraft Inventory</h2>
           <p className="body-large" style={{ maxWidth: 780, margin: "0 auto", color: "var(--text-secondary)" }}>
@@ -127,11 +127,9 @@ export default function PortfolioSection() {
                   {i.make} {i.model}{i.variant ? ` ${i.variant}` : ""}
                 </h3>
 
-                {/* Year + city (no country); dot only when both exist */}
+                {/* Year only */}
                 <div className="body-small" style={{ color: "var(--text-muted)", marginBottom: 12 }}>
-                  {i.year && i.location_city
-                    ? `${i.year} • ${i.location_city}`
-                    : (i.year || i.location_city || "")}
+                  {i.year || ""}
                 </div>
 
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
@@ -141,7 +139,7 @@ export default function PortfolioSection() {
                   {num(i.total_time_hours) && <Pill>{num(i.total_time_hours).toLocaleString()} hrs TT</Pill>}
                 </div>
 
-                {/* Only Enquire (no "View Listing") */}
+                {/* Only Enquire */}
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <a
                     className="btn-gold"
