@@ -1,190 +1,147 @@
-import React from "react";
-import { ArrowRight, Play, Award, Globe, Shield } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
-const HeroSection = () => {
-  const handleContactClick = () => {
-    const element = document.getElementById('contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+export default function HeroSection() {
+  const videoRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduce && videoRef.current) {
+      videoRef.current.removeAttribute("autoplay");
+      videoRef.current.pause();
     }
-  };
+  }, []);
 
-  const handleServicesClick = () => {
-    const element = document.getElementById('services');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleVideoPlay = () => {
-    // Handle video play functionality
-    console.log('Playing promotional video');
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section className="professional-section-lg" style={{ 
-      position: 'relative',
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      overflow: 'hidden'
-    }}>
-      {/* Background Video */}
-      <video
-        className="hero-background"
-        autoPlay
-        muted
-        loop
-        playsInline
+    <>
+      <section
+        className="professional-section-lg"
+        style={{
+          position: "relative",
+          minHeight: "clamp(520px, 70vh, 840px)",
+          display: "flex",
+          alignItems: "center",
+          overflow: "hidden",
+          color: "#fff",
+          background: "#0b1222",
+        }}
       >
-        <source src="/background.mp4" type="video/mp4" />
-        {/* Fallback image */}
-        <img src="/hero-jet.jpg" alt="Aviation Background" />
-      </video>
-      
-      {/* Overlay */}
-      <div className="hero-overlay"></div>
-      
-      <div className="professional-content-container">
-        <div className="grid-2" style={{ alignItems: 'center', minHeight: '70vh' }}>
-          {/* Left Content */}
-          <div className="hero-content fade-in">
-            <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                padding: '8px 16px',
-                background: 'rgba(212, 175, 55, 0.9)',
-                borderRadius: '24px',
-              }}>
-                <span style={{ 
-                  color: 'var(--navy-primary)',
-                  fontWeight: '600',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  fontSize: '12px'
-                }}>
-                  Global Aviation Advisory & Transaction Services
+        {/* Background video */}
+        <div style={{ position: "absolute", inset: 0 }} aria-hidden="true">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/hero-poster.jpg"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              filter: "saturate(1.05) contrast(1.05)",
+            }}
+          >
+            <source src="/hero.webm" type="video/webm" />
+            <source src="/hero.mp4" type="video/mp4" />
+          </video>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to bottom, rgba(5,8,16,0.55), rgba(5,8,16,0.75) 40%, rgba(5,8,16,0.9))",
+            }}
+          />
+        </div>
+
+        {/* Content */}
+        <div style={{ position: "relative", zIndex: 2, width: "100%" }}>
+          <div className="grid-2" style={{ alignItems: "end", minHeight: "60vh" }}>
+            <div style={{ paddingTop: 24, paddingBottom: 24 }}>
+              <div style={{ marginBottom: 18 }}>
+                <span
+                  style={{
+                    padding: "8px 16px",
+                    background: "rgba(212,175,55,0.9)",
+                    borderRadius: 24,
+                    color: "var(--navy-primary)",
+                    fontWeight: 700,
+                    letterSpacing: ".16em",
+                    textTransform: "uppercase",
+                    fontSize: 12,
+                  }}
+                >
+                  Aircraft Sales & Acquisitions
                 </span>
               </div>
-            </div>
-            
-            <h1 className="display-huge" style={{ marginBottom: '24px', color: 'var(--text-white)' }}>
-              Elevating Aviation
-              <span style={{ color: 'var(--gold-primary)' }}> Excellence</span>
-            </h1>
-            
-            <p className="body-large" style={{ 
-              marginBottom: '24px', 
-              maxWidth: '540px', 
-              color: 'rgba(255, 255, 255, 0.9)',
-              fontWeight: '400'
-            }}>
-              AeroFyn delivers trusted, transparent aircraft sales, leasing, and compliance solutions — 
-              connecting India, Europe, and emerging markets with world-class aviation expertise.
-            </p>
-            
-            <p className="body-medium" style={{ 
-              marginBottom: '40px', 
-              maxWidth: '520px',
-              color: 'rgba(255, 255, 255, 0.8)'
-            }}>
-              From shortlist to handover, we de‑risk every step with independent pre‑purchase inspections, 
-              neutral escrow, data‑led valuations, and audit‑ready records — ensuring zero surprises.
-            </p>
-            
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: '48px' }}>
-              <button className="btn-gold" onClick={handleContactClick}>
-                Get Started
-                <ArrowRight size={20} />
-              </button>
-              <button 
-                className="btn-secondary" 
-                onClick={handleVideoPlay}
-                style={{ 
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(10px)',
-                  color: 'var(--text-white)',
-                  borderColor: 'rgba(255, 255, 255, 0.3)'
-                }}
-              >
-                <Play size={20} />
-                Watch Our Story
-              </button>
-            </div>
 
-            {/* Trust Indicators */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
-                  padding: '8px',
-                  background: 'rgba(212, 175, 55, 0.2)',
-                  borderRadius: '8px',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <Award size={20} style={{ color: 'var(--gold-primary)' }} />
-                </div>
-                <div>
-                  <div style={{ color: 'var(--text-white)', fontWeight: '600', fontSize: '16px' }}>
-                    15+ Years
-                  </div>
-                  <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px' }}>
-                    Experience
-                  </div>
-                </div>
-              </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
-                  padding: '8px',
-                  background: 'rgba(212, 175, 55, 0.2)',
-                  borderRadius: '8px',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <Globe size={20} style={{ color: 'var(--gold-primary)' }} />
-                </div>
-                <div>
-                  <div style={{ color: 'var(--text-white)', fontWeight: '600', fontSize: '16px' }}>
-                    Global Reach
-                  </div>
-                  <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px' }}>
-                    India • Europe • UK
-                  </div>
-                </div>
-              </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
-                  padding: '8px',
-                  background: 'rgba(212, 175, 55, 0.2)',
-                  borderRadius: '8px',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <Shield size={20} style={{ color: 'var(--gold-primary)' }} />
-                </div>
-                <div>
-                  <div style={{ color: 'var(--text-white)', fontWeight: '600', fontSize: '16px' }}>
-                    IADA Ethics
-                  </div>
-                  <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px' }}>
-                    Compliant
-                  </div>
-                </div>
+              <h1 style={{ marginBottom: 14, color: "var(--text-white)" }}>
+                Bespoke Brokerage for <span style={{ color: "var(--gold-primary)" }}>Private Aviation</span>
+              </h1>
+
+              <p style={{ marginBottom: 24, maxWidth: 760, color: "rgba(255,255,255,0.90)" }}>
+                Off-market access, discreet negotiations, and end-to-end transaction support.
+              </p>
+
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
+                <button className="btn-gold" onClick={() => scrollTo("portfolio")}>
+                  Browse Inventory
+                </button>
+                <button
+                  className="btn-outline"
+                  onClick={() => setShowModal(true)}
+                  style={{
+                    border: "1px solid rgba(255,255,255,.55)",
+                    color: "#fff",
+                    padding: "12px 18px",
+                    borderRadius: 10,
+                  }}
+                >
+                  ▶ Watch Our Story
+                </button>
               </div>
             </div>
-          </div>
-
-          {/* Right Side - Key Stats */}
-          <div style={{ 
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%'
-          }}>
+            <div />
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-export default HeroSection;
+      {/* Video Modal */}
+      {showModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.8)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 999,
+          }}
+          onClick={() => setShowModal(false)}
+        >
+          <video
+            controls
+            autoPlay
+            style={{
+              maxWidth: "90%",
+              maxHeight: "80%",
+              boxShadow: "0 0 30px rgba(0,0,0,0.6)",
+            }}
+          >
+            <source src="/hero.mp4" type="video/mp4" />
+          </video>
+        </div>
+      )}
+    </>
+  );
+}
