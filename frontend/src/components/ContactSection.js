@@ -117,7 +117,6 @@ const ContactSection = () => {
       icon: <Mail size={28} />,
       title: "Get In Touch",
       details: [
-        "contact@aerofyn.com",
         "contact@aerofyn.com"
       ]
     }
