@@ -16,7 +16,9 @@
       "location_country": null,
       "total_time_hours": 2592,
       "seats": 5,
-      "images": []
+      "images": [
+        "/assets/a109sp-2015.jpg"
+      ]
     },
     {
       "id": "falcon-900ex-easy-2011",
@@ -33,7 +35,9 @@
       "location_country": null,
       "total_time_hours": 4207.14,
       "seats": 14,
-      "images": []
+      "images": [
+        "/assets/falcon-900ex-easy-2011.jpg"
+      ]
     },
     {
       "id": "dhc6-400-2012",
@@ -50,7 +54,9 @@
       "location_country": null,
       "total_time_hours": 6978.3,
       "seats": 18,
-      "images": []
+      "images": [
+        "/assets/dhc6-400-2012.jpg"
+      ]
     },
     {
       "id": "dhc6-400-2014",
@@ -67,9 +73,10 @@
       "location_country": null,
       "total_time_hours": 1641.9,
       "seats": 18,
-      "images": []
+      "images": [
+        "/assets/dhc6-400-2014.jpg"
+      ]
     },
-
     {
       "id": "sr22t-g7-2023-n39js",
       "url": "https://aerista.com/showroom/",
@@ -85,7 +92,9 @@
       "location_country": "USA",
       "total_time_hours": 250,
       "seats": 4,
-      "images": []
+      "images": [
+        "/assets/sr22t-g7-2023-n39js.jpg"
+      ]
     },
     {
       "id": "sr22-g6-2019-n925lb",
@@ -102,7 +111,9 @@
       "location_country": "USA",
       "total_time_hours": 900,
       "seats": 4,
-      "images": []
+      "images": [
+        "/assets/sr22-g6-2019-n925lb.jpg"
+      ]
     },
     {
       "id": "sr22t-g6-2022-n615dw",
@@ -119,9 +130,10 @@
       "location_country": "USA",
       "total_time_hours": 335,
       "seats": 4,
-      "images": []
+      "images": [
+        "/assets/sr22t-g6-2022-n615dw.jpg"
+      ]
     },
-
     {
       "id": "citation-encore-2001-sn549",
       "url": "https://globaljetsales.com/listings/",
@@ -137,7 +149,9 @@
       "location_country": "USA",
       "total_time_hours": 3575,
       "seats": 8,
-      "images": []
+      "images": [
+        "/assets/citation-encore-2001-sn549.jpg"
+      ]
     },
     {
       "id": "falcon-2000ex-2003-sn7",
@@ -154,7 +168,9 @@
       "location_country": "USA",
       "total_time_hours": 3731,
       "seats": 10,
-      "images": []
+      "images": [
+        "/assets/falcon-2000ex-2003-sn7.jpg"
+      ]
     },
     {
       "id": "challenger-300-2010-sn20252",
@@ -171,7 +187,9 @@
       "location_country": null,
       "total_time_hours": 5484,
       "seats": 9,
-      "images": []
+      "images": [
+        "/assets/challenger-300-2010-sn20252.jpg"
+      ]
     },
     {
       "id": "g650-2013-sn6023",
@@ -188,7 +206,9 @@
       "location_country": null,
       "total_time_hours": 2779,
       "seats": 10,
-      "images": []
+      "images": [
+        "/assets/g650-2013-sn6023.jpg"
+      ]
     },
     {
       "id": "legacy-650-2014-sn14501194",
@@ -205,7 +225,9 @@
       "location_country": null,
       "total_time_hours": 4542,
       "seats": 13,
-      "images": []
+      "images": [
+        "/assets/legacy-650-2014-sn14501194.jpg"
+      ]
     },
     {
       "id": "g280-2015",
@@ -222,9 +244,10 @@
       "location_country": null,
       "total_time_hours": 2652,
       "seats": 10,
-      "images": []
+      "images": [
+        "/assets/g280-2015.jpg"
+      ]
     },
-
     {
       "id": "falcon-900lx-2023-sn332",
       "url": "https://globaljet.aero/en/dassault-falcon900lx-sn332",
@@ -240,7 +263,9 @@
       "location_country": null,
       "total_time_hours": 461,
       "seats": 14,
-      "images": []
+      "images": [
+        "/assets/falcon-900lx-2023-sn332.jpg"
+      ]
     },
     {
       "id": "falcon-900ex-easy-2010-sn236",
@@ -257,9 +282,10 @@
       "location_country": null,
       "total_time_hours": 6120,
       "seats": 14,
-      "images": []
+      "images": [
+        "/assets/falcon-900ex-easy-2010-sn236.jpg"
+      ]
     },
-
     {
       "id": "bbj2-unknown-n310ag",
       "url": "https://www.globalair.com/aircraft-for-sale/listings-by-seller/avjet-global?brokerid=2743",
@@ -275,7 +301,9 @@
       "location_country": null,
       "total_time_hours": 11570,
       "seats": 29,
-      "images": []
+      "images": [
+        "/assets/bbj2-unknown-n310ag.jpg"
+      ]
     },
     {
       "id": "g650er-2016-n900ks",
@@ -292,7 +320,9 @@
       "location_country": null,
       "total_time_hours": 3107,
       "seats": 14,
-      "images": []
+      "images": [
+        "/assets/g650er-2016-n900ks.jpg"
+      ]
     },
     {
       "id": "acj320-unknown-b8415",
@@ -309,7 +339,9 @@
       "location_country": null,
       "total_time_hours": 2526,
       "seats": 30,
-      "images": []
+      "images": [
+        "/assets/acj320-unknown-b8415.jpg"
+      ]
     },
     {
       "id": "bbj-max8-2021-n702f",
@@ -326,7 +358,9 @@
       "location_country": null,
       "total_time_hours": 769,
       "seats": 17,
-      "images": []
+      "images": [
+        "/assets/bbj-max8-2021-n702f.jpg"
+      ]
     },
     {
       "id": "global-xrs-unknown-n989sf",
@@ -343,7 +377,9 @@
       "location_country": null,
       "total_time_hours": 9079,
       "seats": 13,
-      "images": []
+      "images": [
+        "/assets/global-xrs-unknown-n989sf.jpg"
+      ]
     }
   ]
 }
