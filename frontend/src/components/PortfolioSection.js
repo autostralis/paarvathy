@@ -234,4 +234,15 @@ function Badge({ children, dark }) {
       style={{
         background: dark ? "rgba(0,0,0,0.65)" : "rgba(212,175,55,0.18)",
         color: dark ? "#fff" : "var(--gold-primary)",
-        padding: "6px 10
+        padding: "6px 10px",
+        borderRadius: 8,
+        fontSize: 14,
+        fontWeight: 600,
+        letterSpacing: 0.2,
+        display: "inline-block"
+      }}
+    >
+      {children}
+    </span>
+  );
+}
