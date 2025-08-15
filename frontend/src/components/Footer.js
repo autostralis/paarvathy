@@ -1,5 +1,5 @@
 import React from "react";
-import { Plane, Mail, Phone, MapPin, ExternalLink, Award, Globe, Shield } from "lucide-react";
+import { Plane, Mail, MapPin, ExternalLink, Award, Globe, Shield } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -15,7 +15,6 @@ const Footer = () => {
   const companyLinks = [
     { name: "About AeroFyn", href: "#about" },
     { name: "Our Process", href: "#process" },
-    // { name: "Recent Transactions", href: "#portfolio" },
     { name: "Global Presence", href: "#about" },
     { name: "Leadership Team", href: "#about" }
   ];
@@ -94,17 +93,7 @@ const Footer = () => {
                     contact@aerofyn.com
                   </a>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <Phone size={18} style={{ color: 'var(--gold-primary)' }} />
-                  <a 
-                    href="tel:" 
-                    className="body-small" 
-                    style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}
-                    aria-label="Phone number hidden"
-                  >
-                    <span style={{ display: 'none' }}>(Your Number Here)</span>
-                  </a>
-                </div>
+                {/* Phone icon removed */}
               </div>
 
               {/* Certifications */}
