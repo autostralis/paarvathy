@@ -1,346 +1,238 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ExternalLink, ArrowRight } from "lucide-react";
 
-const PortfolioSection = () => {
-  const [activeFilter, setActiveFilter] = useState("all");
+const PLACEHOLDER = "/placeholder-jet.jpg"; // optional: add a placeholder image in /public
 
-  // Mark items as representative examples and keep values confidential by default
-  const portfolioItems = [
-    {
-      id: 1,
-      title: "Citation CJ3",
-      category: "business-jets",
-      image: "/inventory-cj3.webp",
-      description: "Light jet acquisition advisory for a European flight department.",
-      details: "Illustrative case: sourcing, technical due diligence, and EASA conformity plan.",
-      value: "Confidential",
-      year: "Representative",
-      representative: true,
-    },
-    {
-      id: 2,
-      title: "Pilatus PC-12",
-      category: "turboprops",
-      image: "/inventory-pc12.jpg",
-      description: "Single-engine turboprop advisory for corporate shuttle operations.",
-      details: "Illustrative case: operational profile design, PPI support, delivery oversight.",
-      value: "Confidential",
-      year: "Representative",
-      representative: true,
-    },
-    {
-      id: 3,
-      title: "Bell 407",
-      category: "helicopters",
-      image: "/inventory-bell407.webp",
-      description: "Helicopter use-case design for offshore & utility tasks.",
-      details: "Illustrative case: regulatory pathway across multiple jurisdictions.",
-      value: "Confidential",
-      year: "Representative",
-      representative: true,
-    },
-    {
-      id: 4,
-      title: "Global 7500",
-      category: "business-jets",
-      image: "/bombardier-challenger-global-7500-1.jpg.webp",
-      description: "Ultra-long-range mission planning and procurement advisory.",
-      details: "Illustrative case: long-range delivery planning and compliance roadmap.",
-      value: "Confidential",
-      year: "Representative",
-      representative: true,
-    },
-    {
-      id: 5,
-      title: "Challenger 350",
-      category: "business-jets",
-      image: "/bombardier-challenger-global-7500-2.jpg.webp",
-      description: "Mid-size jet fleet evaluation for corporate flight department.",
-      details: "Illustrative case: documentation review and accelerated close support.",
-      value: "Confidential",
-      year: "Representative",
-      representative: true,
-    },
-    {
-      id: 6,
-      title: "Aviation Consulting",
-      category: "consulting",
-      image: "/csm_g5000__4__resized_ac666d14e0.jpg",
-      description: "Fleet modernization and lifecycle cost modeling.",
-      details: "Illustrative case: long-term CAPEX/OPEX modeling and implementation roadmap.",
-      value: "Confidential",
-      year: "Representative",
-      representative: true,
-    },
-  ];
+export default function PortfolioSection() {
+  const [items, setItems] = useState([]);
+  const [query, setQuery] = useState("");
+  const [cat, setCat] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
 
-  const filters = [
-    { id: "all", label: "All" },
-    { id: "business-jets", label: "Business Jets" },
-    { id: "turboprops", label: "Turboprops" },
-    { id: "helicopters", label: "Helicopters" },
-    { id: "consulting", label: "Consulting" },
-  ];
+  // Fetch inventory.json from /public on load
+  useEffect(() => {
+    let cancel = false;
+    (async () => {
+      try {
+        const res = await fetch("/inventory.json", { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (!cancel) setItems(Array.isArray(json.items) ? json.items : []);
+      } catch (e) {
+        if (!cancel) setErr(e.message || "Failed to load inventory");
+      } finally {
+        if (!cancel) setLoading(false);
+      }
+    })();
+    return () => { cancel = true; };
+  }, []);
 
-  const filteredItems =
-    activeFilter === "all"
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.category === activeFilter);
+  // Build category set dynamically from data
+  const categories = useMemo(() => {
+    const set = new Set(items.map(i => i.category).filter(Boolean));
+    return ["all", ...Array.from(set)];
+  }, [items]);
+
+  // Filter by category + search
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return items.filter(i => {
+      const catOk = cat === "all" || i.category === cat;
+      const text = `${i.make || ""} ${i.model || ""} ${i.variant || ""}`.toLowerCase();
+      const qOk = !q || text.includes(q);
+      return catOk && qOk && (i.status ?? "for-sale") !== "sold";
+    });
+  }, [items, cat, query]);
+
+  if (loading) {
+    return (
+      <section id="portfolio" className="professional-section">
+        <div className="professional-content-container">Loading inventory…</div>
+      </section>
+    );
+  }
+  if (err) {
+    return (
+      <section id="portfolio" className="professional-section">
+        <div className="professional-content-container" style={{ color: "var(--error, #b91c1c)" }}>
+          Error: {err}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="portfolio" className="professional-section">
       <div className="professional-content-container">
+        {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="display-medium mb-6">Representative Projects</h2>
-          <p
-            className="body-large"
-            style={{ maxWidth: "780px", margin: "0 auto", color: "var(--text-secondary)" }}
-          >
-            A selection of illustrative assignments and case studies to demonstrate scope and
-            capability. Specific tombstones and transaction particulars are shared under NDA upon request.
+          <h2 className="display-medium mb-6">Aircraft Inventory</h2>
+          <p className="body-large" style={{ maxWidth: 780, margin: "0 auto", color: "var(--text-secondary)" }}>
+            Browse currently available aircraft across categories. Data updates by editing <code>public/inventory.json</code>.
           </p>
         </div>
 
-        {/* Filter Buttons */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "16px",
-            marginBottom: "60px",
-            flexWrap: "wrap",
-          }}
-        >
-          {filters.map((filter) => (
-            <button
-              key={filter.id}
-              onClick={() => setActiveFilter(filter.id)}
-              style={{
-                padding: "12px 24px",
-                borderRadius: "8px",
-                border: "2px solid var(--border-light)",
-                background:
-                  activeFilter === filter.id ? "var(--navy-primary)" : "var(--bg-primary)",
-                color:
-                  activeFilter === filter.id ? "var(--text-white)" : "var(--text-secondary)",
-                fontWeight: "600",
-                fontSize: "14px",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-              }}
-            >
-              {filter.label}
-            </button>
-          ))}
+        {/* Controls */}
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginBottom: 40 }}>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search make/model…"
+            style={{
+              padding: "12px 14px",
+              border: "1px solid var(--border-light)",
+              borderRadius: 8,
+              minWidth: 220
+            }}
+          />
+          <select
+            value={cat}
+            onChange={(e) => setCat(e.target.value)}
+            style={{ padding: "12px 14px", borderRadius: 8 }}
+          >
+            {categories.map(c => (
+              <option key={c} value={c}>
+                {c === "all" ? "All Categories" : toTitle(c)}
+              </option>
+            ))}
+          </select>
+          <a className="btn-gold" href="#contact">List Your Aircraft</a>
         </div>
 
-        {/* Portfolio Grid */}
+        {/* Grid */}
         <div className="grid-3">
-          {filteredItems.map((item, index) => (
-            <div
-              key={item.id}
+          {filtered.map((i, index) => (
+            <article
+              key={i.id || `${i.make}-${i.model}-${index}`}
               className="professional-card scale-in"
-              style={{
-                animationDelay: `${index * 0.1}s`,
-                overflow: "hidden",
-                padding: "0",
-              }}
+              style={{ overflow: "hidden", padding: 0, animationDelay: `${index * 0.06}s` }}
             >
               {/* Image */}
-              <div style={{ position: "relative", height: "240px", overflow: "hidden" }}>
+              <div style={{ position: "relative", height: 220, overflow: "hidden" }}>
                 <img
-                  src={item.image}
-                  alt={item.title}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    transition: "transform 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                  src={(i.images && i.images[0]) || PLACEHOLDER}
+                  alt={`${i.make || ""} ${i.model || ""}`.trim()}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s ease" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
                   onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                 />
 
-                {/* "Representative" Badge (left) */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "16px",
-                    left: "16px",
-                    padding: "6px 12px",
-                    background: "var(--gold-primary)",
-                    color: "var(--navy-primary)",
-                    borderRadius: "20px",
-                    fontSize: "12px",
-                    fontWeight: "700",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                  }}
-                >
-                  {item.representative ? "Representative" : item.year}
-                </div>
-
-                {/* Value Badge (right) */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "16px",
-                    right: "16px",
-                    padding: "6px 12px",
-                    background: "rgba(30, 41, 59, 0.9)",
-                    color: "var(--text-white)",
-                    borderRadius: "20px",
-                    fontSize: "12px",
-                    fontWeight: "600",
-                    backdropFilter: "blur(10px)",
-                  }}
-                >
-                  {item.value || "Confidential"}
-                </div>
-
-                {/* Overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background:
-                      "linear-gradient(180deg, transparent 0%, rgba(30, 41, 59, 0.8) 100%)",
-                    opacity: 0,
-                    transition: "opacity 0.3s ease",
-                  }}
-                  className="portfolio-overlay"
-                />
+                {/* Badges */}
+                {(i.price_usd || i.status) && (
+                  <div style={{ position: "absolute", top: 12, right: 12, display: "flex", gap: 8 }}>
+                    <Badge dark>
+                      {i.price_usd ? `$${Intl.NumberFormat().format(i.price_usd)}` : "Call for price"}
+                    </Badge>
+                    {i.status && i.status !== "for-sale" && <Badge dark>{toTitle(i.status)}</Badge>}
+                  </div>
+                )}
               </div>
 
               {/* Content */}
-              <div style={{ padding: "32px" }}>
-                <h3 className="heading-3 mb-4" style={{ color: "var(--navy-primary)" }}>
-                  {item.title}
+              <div style={{ padding: 20 }}>
+                <h3 className="heading-3" style={{ marginBottom: 6, color: "var(--navy-primary)" }}>
+                  {i.make} {i.model}{i.variant ? ` ${i.variant}` : ""}
                 </h3>
+                <div className="body-small" style={{ color: "var(--text-muted)", marginBottom: 12 }}>
+                  {i.year ? `${i.year} • ` : ""}{i.location_country || i.location_city || ""}
+                </div>
 
-                <p className="body-medium mb-4" style={{ color: "var(--text-secondary)" }}>
-                  {item.description}
-                </p>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+                  {num(i.seats) && <Pill>{i.seats} seats</Pill>}
+                  {num(i.range_nm) && <Pill>{i.range_nm} nm</Pill>}
+                  {num(i.speed_knots) && <Pill>{i.speed_knots} kt</Pill>}
+                  {num(i.total_time_hours) && <Pill>{num(i.total_time_hours).toLocaleString()} hrs TT</Pill>}
+                </div>
 
-                <p
-                  className="body-small mb-6"
-                  style={{ color: "var(--text-muted)", fontStyle: "italic" }}
-                >
-                  {item.details}
-                </p>
-
-                <button
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    background: "none",
-                    border: "none",
-                    color: "var(--gold-primary)",
-                    fontWeight: "600",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    transition: "all 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.gap = "12px";
-                    e.currentTarget.style.color = "var(--navy-primary)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.gap = "8px";
-                    e.currentTarget.style.color = "var(--gold-primary)";
-                  }}
-                >
-                  View Details
-                  <ArrowRight size={16} />
-                </button>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  {i.url && (
+                    <a className="btn-secondary" href={i.url} target="_blank" rel="noreferrer">
+                      <ExternalLink size={18} />
+                      View Listing
+                    </a>
+                  )}
+                  <a
+                    className="btn-gold"
+                    href={`mailto:contact@aerofyn.com?subject=${encodeURIComponent(
+                      `Inquiry: ${i.make} ${i.model}${i.variant ? " " + i.variant : ""}`
+                    )}&body=${encodeURIComponent(i.url || "")}`}
+                  >
+                    Enquire
+                    <ArrowRight size={18} />
+                  </a>
+                </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
 
-        {/* CTA Section */}
+        {/* CTA */}
         <div
           style={{
-            marginTop: "80px",
-            padding: "60px",
+            marginTop: 80,
+            padding: 60,
             background: "var(--navy-primary)",
-            borderRadius: "16px",
+            borderRadius: 16,
             textAlign: "center",
-            color: "var(--text-white)",
+            color: "var(--text-white)"
           }}
         >
           <h3 className="heading-1 mb-4" style={{ color: "var(--text-white)" }}>
-            Request Our Verified Deal Sheet
+            Can’t find your exact spec?
           </h3>
-          <p
-            className="body-large mb-8"
-            style={{
-              color: "rgba(255, 255, 255, 0.8)",
-              maxWidth: "680px",
-              margin: "0 auto 32px",
-            }}
-          >
-            We share tombstones and detailed transaction credentials under NDA. Speak with our
-            team to receive a tailored portfolio relevant to your mission profile.
+          <p className="body-large mb-8" style={{ color: "rgba(255,255,255,0.8)", maxWidth: 680, margin: "0 auto 32px" }}>
+            Tell us your mission profile—range, seats, budget—and we’ll source curated off-market options.
           </p>
-
-          <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
-            <a className="btn-gold" href="mailto:contact@aerofyn.com?subject=Request%20Deal%20Sheet%20(NDA)">
-              Request Deal Sheet
-              <ArrowRight size={20} />
-            </a>
-            <button
-              className="btn-secondary"
-              style={{
-                background: "rgba(255, 255, 255, 0.1)",
-                borderColor: "rgba(255, 255, 255, 0.3)",
-                color: "var(--text-white)",
-              }}
-              onClick={() => {
-                const element = document.getElementById("services");
-                if (element) element.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              <ExternalLink size={20} />
-              View All Services
-            </button>
-          </div>
-
-          <p
-            className="body-small"
-            style={{
-              marginTop: "20px",
-              color: "rgba(255, 255, 255, 0.6)",
-              fontSize: "12px",
-            }}
-          >
-            *All project examples shown above are representative only. Specific client names and
-            financial details are confidential.
-          </p>
+          <a className="btn-gold" href="mailto:contact@aerofyn.com?subject=Aircraft%20Sourcing%20Request">
+            Request Sourcing
+            <ArrowRight size={20} />
+          </a>
         </div>
       </div>
-
-      <style jsx>{`
-        .professional-card:hover .portfolio-overlay {
-          opacity: 1;
-        }
-
-        @media (max-width: 768px) {
-          .portfolio-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   );
-};
+}
 
-export default PortfolioSection;
+/* Small helpers */
+function toTitle(s) {
+  return String(s || "")
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+function num(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+function Badge({ children, dark }) {
+  return (
+    <span
+      style={{
+        background: dark ? "rgba(0,0,0,0.65)" : "rgba(212,175,55,0.18)",
+        color: dark ? "#fff" : "var(--gold-primary)",
+        padding: "6px 10px",
+        borderRadius: 10,
+        fontSize: 12,
+        fontWeight: 700
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+function Pill({ children }) {
+  return (
+    <span
+      style={{
+        background: "rgba(212,175,55,0.15)",
+        color: "var(--gold-primary)",
+        padding: "4px 8px",
+        borderRadius: 6,
+        fontSize: 12,
+        fontWeight: 600
+      }}
+    >
+      {children}
+    </span>
+  );
+}
