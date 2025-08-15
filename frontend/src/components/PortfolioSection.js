@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ExternalLink, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-const PLACEHOLDER = "/placeholder-jet.jpg"; // optional: add a placeholder image in /public
+const PLACEHOLDER = "/placeholder-jet.jpg"; // optional placeholder in /public
 
 export default function PortfolioSection() {
   const [items, setItems] = useState([]);
@@ -10,7 +10,6 @@ export default function PortfolioSection() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
 
-  // Fetch inventory.json from /public on load
   useEffect(() => {
     let cancel = false;
     (async () => {
@@ -28,13 +27,11 @@ export default function PortfolioSection() {
     return () => { cancel = true; };
   }, []);
 
-  // Build category set dynamically from data
   const categories = useMemo(() => {
     const set = new Set(items.map(i => i.category).filter(Boolean));
     return ["all", ...Array.from(set)];
   }, [items]);
 
-  // Filter by category + search
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return items.filter(i => {
@@ -65,11 +62,11 @@ export default function PortfolioSection() {
   return (
     <section id="portfolio" className="professional-section">
       <div className="professional-content-container">
-        {/* Header */}
+        {/* Header (no edit note) */}
         <div className="text-center mb-16">
           <h2 className="display-medium mb-6">Aircraft Inventory</h2>
           <p className="body-large" style={{ maxWidth: 780, margin: "0 auto", color: "var(--text-secondary)" }}>
-            Browse currently available aircraft across categories. Data updates by editing <code>public/inventory.json</code>.
+            Browse currently available aircraft across categories.
           </p>
         </div>
 
@@ -118,15 +115,10 @@ export default function PortfolioSection() {
                   onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                 />
 
-                {/* Badges */}
-                {(i.price_usd || i.status) && (
-                  <div style={{ position: "absolute", top: 12, right: 12, display: "flex", gap: 8 }}>
-                    <Badge dark>
-                      {i.price_usd ? `$${Intl.NumberFormat().format(i.price_usd)}` : "Call for price"}
-                    </Badge>
-                    {i.status && i.status !== "for-sale" && <Badge dark>{toTitle(i.status)}</Badge>}
-                  </div>
-                )}
+                {/* Always show "Call for price" */}
+                <div style={{ position: "absolute", top: 12, right: 12 }}>
+                  <Badge dark>Call for price</Badge>
+                </div>
               </div>
 
               {/* Content */}
@@ -145,18 +137,13 @@ export default function PortfolioSection() {
                   {num(i.total_time_hours) && <Pill>{num(i.total_time_hours).toLocaleString()} hrs TT</Pill>}
                 </div>
 
+                {/* Only Enquire (no "View Listing") */}
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  {i.url && (
-                    <a className="btn-secondary" href={i.url} target="_blank" rel="noreferrer">
-                      <ExternalLink size={18} />
-                      View Listing
-                    </a>
-                  )}
                   <a
                     className="btn-gold"
                     href={`mailto:contact@aerofyn.com?subject=${encodeURIComponent(
                       `Inquiry: ${i.make} ${i.model}${i.variant ? " " + i.variant : ""}`
-                    )}&body=${encodeURIComponent(i.url || "")}`}
+                    )}`}
                   >
                     Enquire
                     <ArrowRight size={18} />
@@ -194,7 +181,7 @@ export default function PortfolioSection() {
   );
 }
 
-/* Small helpers */
+/* Helpers */
 function toTitle(s) {
   return String(s || "")
     .replace(/[-_]/g, " ")
